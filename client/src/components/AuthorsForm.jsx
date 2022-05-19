@@ -12,6 +12,7 @@ const AuthorForm = props => {
         msg: ""
     })
     const history = useHistory();
+    const [badAuthor, setBadAuthor] = useState(false); 
 
     useEffect(() => {
         if (id.id !== undefined) {
@@ -25,6 +26,7 @@ const AuthorForm = props => {
                 })
                 .catch(err => {
                     console.log(err);
+                    setBadAuthor(true);
                 });
         }
     }, []);
@@ -43,28 +45,28 @@ const AuthorForm = props => {
             axios.put(`http://localhost:8000/api/authors/${id.id}`, { ...authorName })
                 .then(res => {
                     console.log(res);
-                    if(res.data.message !== undefined){
-                        throw(res);
+                    if (res.data.message !== undefined) {
+                        throw (res);
                     }
                     history.push("/");
                 })
                 .catch(err => {
                     console.log(err);
-                    setError({...error, msg : err.data.error.message});
+                    setError({ ...error, msg: err.data.error.message });
                 });
         }
         else {
             axios.post(`http://localhost:8000/api/authors`, { ...authorName })
                 .then(res => {
                     console.log(res);
-                    if(res.data.message !== undefined){
-                        throw(res);
+                    if (res.data.message !== undefined) {
+                        throw (res);
                     }
                     history.push("/");
                 })
                 .catch(err => {
                     console.log(err);
-                    setError({...error, msg : err.data.error.message});
+                    setError({ ...error, msg: err.data.error.message });
                 });
         }
     }
@@ -72,6 +74,7 @@ const AuthorForm = props => {
     return (
         <>
             <Link to="/">Home</Link>
+            <p>{badAuthor? <a href="/new">Author Doesnt Exist, Click Here</a> : ""}</p>
             <p>{error.msg}</p>
             <form onSubmit={submitHandler}>
                 <label htmlFor="fullname">Name:</label>
